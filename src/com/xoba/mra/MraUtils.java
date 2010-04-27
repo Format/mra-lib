@@ -503,26 +503,6 @@ public class MraUtils {
         copy(new BufferedInputStream(new FileInputStream(from), 65536), out);
     }
 
-    private static interface IPair<A, B> {
-
-        public A getA();
-
-        public B getB();
-
-    }
-
-    public static void main(String... args) throws Exception {
-        Random random = new Random();
-        Map<String, Integer> map = new HashMap<String, Integer>();
-        for (int i = 0; i < 20; i++) {
-            map.put("i-" + i, random.nextInt(100));
-        }
-        map = sortByComparableValues(map, false);
-        for (String s : map.keySet()) {
-            logger.debugf("%5s = %,5d", s, map.get(s));
-        }
-    }
-
     public static <A, B> Map<A, B> sortByValues(Map<A, B> map, final Comparator<B> comp) {
         List<Map.Entry<A, B>> entries = new LinkedList<Entry<A, B>>(map.entrySet());
         Collections.sort(entries, new Comparator<Map.Entry<A, B>>() {

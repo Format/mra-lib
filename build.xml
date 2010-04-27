@@ -1,0 +1,45 @@
+<project name="mra-lib" default="dist" basedir=".">
+
+	<description>
+        simple example build file
+    </description>
+
+	<!-- set global properties for this build -->
+	<property name="src" location="src" />
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
+
+	<target name="init" depends='clean'>
+		<tstamp>
+			<format property="ISO" pattern="yyyyMMdd'T'HHmmss'Z'" timezone='GMT' />
+		</tstamp>
+		<mkdir dir="${build}" />
+	</target>
+
+	<target name="compile" depends="init" description="compile the source ">
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}" />
+	</target>
+
+	<target name="dist" depends="compile" description="generate the distribution">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}" />
+
+		<copy file='COPYING.txt' todir='build' />
+
+		<!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+		<jar jarfile="${dist}/mra-lib_1_0.jar" basedir="${build}" />
+		<zip destfile='${dist}/mra-lib_1_0_src.zip'>
+			<fileset dir="${src}" />
+			<fileset dir="." includes="COPYING.txt" />
+		</zip>
+
+	</target>
+
+	<target name="clean" description="clean up">
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+	</target>
+
+</project>
