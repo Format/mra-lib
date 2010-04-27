@@ -37,9 +37,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.UUID;
 import java.util.Map.Entry;
@@ -810,6 +808,24 @@ public class MraUtils {
         final long msb = extractLongValue(array);
         final long lsb = extractLongValue(array, 8);
         return new UUID(msb, lsb);
+    }
+
+    public final static byte[] serialiseUUID(final UUID u) {
+        final byte[] out = new byte[16];
+        writeLong(u.getMostSignificantBits(), out, 0);
+        writeLong(u.getLeastSignificantBits(), out, 8);
+        return out;
+    }
+
+    public final static void writeLong(final long v, final byte[] writeBuffer, final int offset) {
+        writeBuffer[0 + offset] = (byte) (v >>> 56);
+        writeBuffer[1 + offset] = (byte) (v >>> 48);
+        writeBuffer[2 + offset] = (byte) (v >>> 40);
+        writeBuffer[3 + offset] = (byte) (v >>> 32);
+        writeBuffer[4 + offset] = (byte) (v >>> 24);
+        writeBuffer[5 + offset] = (byte) (v >>> 16);
+        writeBuffer[6 + offset] = (byte) (v >>> 8);
+        writeBuffer[7 + offset] = (byte) (v >>> 0);
     }
 
     public static double calcEffectiveNumber(Collection<? extends Number> weights) {
