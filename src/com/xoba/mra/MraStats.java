@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -83,13 +84,37 @@ public class MraStats {
         return medianBySort(numbers);
     }
 
-    public static final void removeNaNs(Collection<? extends Number> c) {
-        Iterator<? extends Number> it = c.iterator();
-        while (it.hasNext()) {
-            if (Double.isNaN(it.next().doubleValue())) {
-                it.remove();
+    public static final List<Double> removeNaNs(Collection<? extends Number> c) {
+        List<Double> out = new LinkedList<Double>();
+        for (Number n : c) {
+            double v = n.doubleValue();
+            if (!Double.isNaN(v)) {
+                out.add(v);
             }
         }
+        return out;
+    }
+
+    public static final List<Double> removeNaNsAndInfinites(Collection<? extends Number> c) {
+        List<Double> out = new LinkedList<Double>();
+        for (Number n : c) {
+            double v = n.doubleValue();
+            if (!(Double.isNaN(v) || Double.isInfinite(v))) {
+                out.add(v);
+            }
+        }
+        return out;
+    }
+
+    public static final List<Double> removeInfinites(Collection<? extends Number> c) {
+        List<Double> out = new LinkedList<Double>();
+        for (Number n : c) {
+            double v = n.doubleValue();
+            if (!Double.isInfinite(v)) {
+                out.add(v);
+            }
+        }
+        return out;
     }
 
     public static final double mean(Collection<? extends Number> c) {
