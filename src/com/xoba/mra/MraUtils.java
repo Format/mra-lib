@@ -59,6 +59,13 @@ public class MraUtils {
         return new Dimension(width, height);
     }
 
+    public static byte[] load(InputStream in) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        copy(in, out);
+        out.close();
+        return out.toByteArray();
+    }
+
     public static String getRandomMD5Hash(int bytesOfRandomness) {
         byte[] buf = new byte[bytesOfRandomness];
         new Random().nextBytes(buf);
