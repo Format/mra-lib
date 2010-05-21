@@ -24,9 +24,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -45,6 +48,67 @@ import java.util.Map.Entry;
 public class MraUtils {
 
     private static final ILogger logger = LogFactory.getDefault().create();
+
+    /**
+     * showing i'll be half as old as daddy on 2010-11-20!!
+     * 
+     * @param args
+     * @throws Exception
+     */
+    public static void main(String... args) throws Exception {
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        logger.debugf("now = %s", df.format(new Date()));
+
+        long start = System.currentTimeMillis() - 100L * 365L * 24L * 3600L * 1000L;
+        long end = System.currentTimeMillis() + 100L * 365L * 24L * 3600L * 1000L;
+        SortedSet<String> set = new TreeSet<String>();
+        while (end > start) {
+            set.add(df.format(new Date(start)));
+            start += 6L * 3600L * 1000L;
+        }
+
+        PrintWriter pw = new PrintWriter("/tmp/dates.csv");
+        pw.println("day\tt1\tt2\tdiff");
+        
+        logger.debugf("%s to %s", set.first(), set.last());
+
+        String d1 = "1927-11-12";
+        String d2 = "1969-05-17";
+
+        int t1 = -1;
+        int t2 = -1;
+
+        for (String d : set) {
+
+            if (t1 >= 0) {
+                t1++;
+            }
+
+            if (t2 >= 0) {
+                t2++;
+            }
+
+            if (d.equals(d1)) {
+                t1 = 0;
+            }
+
+            if (d.equals(d2)) {
+                t2 = 0;
+            }
+
+            if (t1 > 0 && t2 > 0 && t1 == 2 * t2) {
+                logger.debugf("%s", d);
+            }
+            
+            pw.printf("%s\t%d\t%d\t%d",d,t1,t2,t1-2*t2);
+            pw.println();
+        }
+
+        pw.close();
+        
+    }
 
     private MraUtils() {
     }
