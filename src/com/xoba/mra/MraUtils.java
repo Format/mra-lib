@@ -40,7 +40,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.UUID;
 import java.util.Map.Entry;
@@ -55,7 +57,7 @@ public class MraUtils {
      * @param args
      * @throws Exception
      */
-    public static void main(String... args) throws Exception {
+    public static void _main(String... args) throws Exception {
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -71,7 +73,7 @@ public class MraUtils {
 
         PrintWriter pw = new PrintWriter("/tmp/dates.csv");
         pw.println("day\tt1\tt2\tdiff");
-        
+
         logger.debugf("%s to %s", set.first(), set.last());
 
         String d1 = "1927-11-12";
@@ -101,13 +103,13 @@ public class MraUtils {
             if (t1 > 0 && t2 > 0 && t1 == 2 * t2) {
                 logger.debugf("%s", d);
             }
-            
-            pw.printf("%s\t%d\t%d\t%d",d,t1,t2,t1-2*t2);
+
+            pw.printf("%s\t%d\t%d\t%d", d, t1, t2, t1 - 2 * t2);
             pw.println();
         }
 
         pw.close();
-        
+
     }
 
     private MraUtils() {
@@ -615,6 +617,57 @@ public class MraUtils {
 
     public static final double log2(final Number x) {
         return log2(x.doubleValue());
+    }
+
+    public static void main(String... args) throws Exception {
+
+        final int n = 1105;
+        final int m = 110;
+
+        final List<String> items = new LinkedList<String>();
+        for (int i = 0; i < n; i++) {
+            items.add("item-" + i);
+        }
+
+        Map<Integer, List<String>> divided = splitListIntoRoughlyEqualSizePartsPseudoRandomly(412234242, items, m);
+
+        long count = 0;
+        for (final Integer part : divided.keySet()) {
+            final List<String> list = divided.get(part);
+            count += list.size();
+            System.out.printf("part %,4d (%,4d items): %s\n", part, list.size(), list);
+        }
+        System.out.println(count);
+    }
+
+    /**
+     * choose anything, but same seed leads to exact; different seeds give
+     * different output
+     */
+    public static <T> SortedMap<Integer, List<T>> splitListIntoRoughlyEqualSizePartsPseudoRandomly(long seed,
+            List<T> list, int parts) {
+
+        Random random = new Random(seed);
+
+        SortedMap<Integer, List<T>> map = new TreeMap<Integer, List<T>>();
+        for (int i = 0; i < parts; i++) {
+            map.put(i, new LinkedList<T>());
+        }
+
+        for (T item : list) {
+            int minIndex = random.nextInt(parts);
+            List<Integer> indicies = new LinkedList<Integer>(map.keySet());
+            Collections.shuffle(indicies, random);
+            for (Integer x : indicies) {
+                int size = map.get(x).size();
+                if (size < map.get(minIndex).size()) {
+                    minIndex = x;
+                }
+            }
+            map.get(minIndex).add(item);
+        }
+
+        return map;
     }
 
     public static <T> List<List<T>> splitListIntoRoughlyEqualSizeParts(List<T> list, int parts) {
