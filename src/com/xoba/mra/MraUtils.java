@@ -26,6 +26,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -619,27 +620,6 @@ public class MraUtils {
         return log2(x.doubleValue());
     }
 
-    public static void main(String... args) throws Exception {
-
-        final int n = 1105;
-        final int m = 110;
-
-        final List<String> items = new LinkedList<String>();
-        for (int i = 0; i < n; i++) {
-            items.add("item-" + i);
-        }
-
-        Map<Integer, List<String>> divided = splitListIntoRoughlyEqualSizePartsPseudoRandomly(412234242, items, m);
-
-        long count = 0;
-        for (final Integer part : divided.keySet()) {
-            final List<String> list = divided.get(part);
-            count += list.size();
-            System.out.printf("part %,4d (%,4d items): %s\n", part, list.size(), list);
-        }
-        System.out.println(count);
-    }
-
     /**
      * choose anything, but same seed leads to exact; different seeds give
      * different output
@@ -898,7 +878,49 @@ public class MraUtils {
         }
     }
 
+    public static void main(String... args) throws Exception {
+
+        String a = "c0000";
+        String b = "c0000";
+
+        logger.debugf("compare(%s, %s) = %d", a, b, compareArrays(convertFromHex(a), convertFromHex(b)));
+
+    }
+
+    public static final int compareArrays(final byte[] a, final byte[] b) {
+        if (a == null) {
+            return -1;
+        } else if (b == null) {
+            return 1;
+        } else {
+            int min = Math.min(a.length, b.length);
+            for (int i = 0; i < min; i++) {
+                int cmp = compareBytes(a[i], b[i]);
+                if (cmp != 0) {
+                    return cmp;
+                }
+            }
+            if (a.length > b.length) {
+                return +1;
+            } else if (b.length > a.length) {
+                return -1;
+            }
+            return 0;
+        }
+
+    }
+
     public static final int compareDoubles(final double a, final double b) {
+        if (a < b) {
+            return -1;
+        } else if (a > b) {
+            return +1;
+        } else {
+            return 0;
+        }
+    }
+
+    public static final int compareBytes(final byte a, final byte b) {
         if (a < b) {
             return -1;
         } else if (a > b) {
