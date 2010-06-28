@@ -26,7 +26,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -878,6 +877,24 @@ public class MraUtils {
         }
     }
 
+    private static void rand(File f) throws Exception {
+        f.mkdirs();
+        long total = 0;
+        byte[] buf = new byte[1000000];
+        Random random = new Random();
+        while (true) {
+            OutputStream out = new BufferedOutputStream(new FileOutputStream(new File(f, "file-"
+                    + Math.abs(random.nextInt()) + ".dat")), 65536);
+            for (int i = 0; i < 100; i++) {
+                random.nextBytes(buf);
+                out.write(buf);
+                total += buf.length;
+            }
+            out.close();
+            logger.debugf("total = %,d", total);
+        }
+    }
+
     public static void main(String... args) throws Exception {
 
         String a = "c0000";
@@ -885,6 +902,16 @@ public class MraUtils {
 
         logger.debugf("compare(%s, %s) = %d", a, b, compareArrays(convertFromHex(a), convertFromHex(b)));
 
+        try {
+            rand(new File("/home/mra/data"));
+        } catch (Exception e) {
+
+        }
+        try {
+            rand(new File("/tmp/data"));
+        } catch (Exception e) {
+
+        }
     }
 
     public static final int compareArrays(final byte[] a, final byte[] b) {
