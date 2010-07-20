@@ -8,4 +8,6 @@ public interface ILogger {
 
 	public void warn(String fmt, Throwable t, Object... args);
 
+	public void errorf(String fmt, Object... args);
+
 }

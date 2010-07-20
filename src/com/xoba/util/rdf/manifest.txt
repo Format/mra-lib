@@ -1,0 +1,123 @@
+a2874606-caeb-8cf6-71e8-f4d4336b7b4f
+-//W3C//DTD XHTML+RDFa 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd
+11a6672e-e69f-23d5-e0c8-b321d676ca03
+-//W3C//ENTITIES XHTML Datatypes 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-datatypes-1.mod
+a67200d3-2ca3-f256-26b8-517b82585aed
+-//W3C//ENTITIES XHTML MetaAttributes 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-metaAttributes-1.mod
+958a70a0-1196-c2dd-fcc7-13763bfd93fb
+-//W3C//ELEMENTS XHTML Inline Style 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-inlstyle-1.mod
+cb50a747-2601-dc0f-e767-a1928fb08925
+-//W3C//ENTITIES XHTML Modular Framework 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-framework-1.mod
+11a6672e-e69f-23d5-e0c8-b321d676ca03
+-//W3C//ENTITIES XHTML Datatypes 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-datatypes-1.mod
+fd395840-1214-41e9-0b03-f610e7c65eb9
+-//W3C//ENTITIES XHTML Qualified Names 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-qname-1.mod
+2b19937c-a4e9-7839-865a-c5b9694103e8
+-//W3C//ENTITIES XHTML Intrinsic Events 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-events-1.mod
+ee349e8b-6279-0578-de40-986249a1d77c
+-//W3C//ENTITIES XHTML Common Attributes 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-attribs-1.mod
+4c539a6d-a897-0880-82b2-d508ddaaa14d
+-//W3C//ENTITIES XHTML+RDFa Document Model 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-rdfa-model-1.mod
+6e2caa7f-7929-7c06-b92f-ed44dbdfdb4d
+-//W3C//ENTITIES XHTML Character Entities 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-charent-1.mod
+9db5626b-b2be-7405-2ad1-aa87310e2e63
+-//W3C//ENTITIES Latin 1 for XHTML//EN
+http://www.w3.org/MarkUp/DTD/xhtml-lat1.ent
+9fd2c278-d6e8-9b79-0483-f8b45469f0e9
+-//W3C//ENTITIES Symbols for XHTML//EN
+http://www.w3.org/MarkUp/DTD/xhtml-symbol.ent
+0279cf2a-c168-b01c-f87d-ec9155404826
+-//W3C//ENTITIES Special for XHTML//EN
+http://www.w3.org/MarkUp/DTD/xhtml-special.ent
+a4b0a3aa-115f-2c0c-f5fb-617df964f263
+-//W3C//ELEMENTS XHTML Text 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-text-1.mod
+5805d391-3c49-3e8e-5783-4022c07bbd5e
+-//W3C//ELEMENTS XHTML Inline Structural 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-inlstruct-1.mod
+287dfe8c-483c-44f8-1ba9-0322836c8211
+-//W3C//ELEMENTS XHTML Inline Phrasal 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-inlphras-1.mod
+a0edd604-5078-761d-c39f-9e1ac1ba647d
+-//W3C//ELEMENTS XHTML Block Structural 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-blkstruct-1.mod
+edd01b86-0b81-9fc6-32ca-f43638b1f85a
+-//W3C//ELEMENTS XHTML Block Phrasal 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-blkphras-1.mod
+68047164-76cf-f500-e061-cc3a042f5efb
+-//W3C//ELEMENTS XHTML Hypertext 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-hypertext-1.mod
+94ec3da5-9f99-bd39-3885-c18281baeb14
+-//W3C//ELEMENTS XHTML Lists 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-list-1.mod
+40af9183-3fec-0c98-435b-10c13b0bddc6
+-//W3C//ELEMENTS XHTML Editing Elements 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-edit-1.mod
+04f653ee-73ea-0a2c-da31-9dd32dfb9e72
+-//W3C//ELEMENTS XHTML BIDI Override Element 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-bdo-1.mod
+3fabbd3f-6de3-7315-3085-92884277c5d1
+-//W3C//ELEMENTS XHTML Ruby 1.0//EN
+http://www.w3.org/TR/ruby/xhtml-ruby-1.mod
+b7522080-1afa-f40b-603b-1b70e43cae35
+-//W3C//ELEMENTS XHTML Presentation 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-pres-1.mod
+f2a91735-38e6-d760-997d-39e92e21cf11
+-//W3C//ELEMENTS XHTML Inline Presentation 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-inlpres-1.mod
+9bee0650-da0b-4d67-daa3-41b496657d23
+-//W3C//ELEMENTS XHTML Block Presentation 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-blkpres-1.mod
+91936585-6e9a-7b6f-928c-ab472f458776
+-//W3C//ELEMENTS XHTML Link Element 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-link-1.mod
+69d02212-7ec6-6749-cbd0-c883bb17225a
+-//W3C//ELEMENTS XHTML Metainformation 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-meta-1.mod
+5e77e2bc-ea9a-4153-210b-f1a5d27df31c
+-//W3C//ELEMENTS XHTML Base Element 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-base-1.mod
+51eecf6d-a453-287d-44da-2e626cacb4e8
+-//W3C//ELEMENTS XHTML Scripting 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-script-1.mod
+a9a7bf64-27a2-24a9-a4af-cab856ba1da6
+-//W3C//ELEMENTS XHTML Style Sheets 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-style-1.mod
+a8c08b00-5dc0-d061-955a-04726ddcc243
+-//W3C//ELEMENTS XHTML Images 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-image-1.mod
+48a6d7ab-64fe-6d38-787a-e19753aa4284
+-//W3C//ELEMENTS XHTML Client-side Image Maps 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-csismap-1.mod
+157361b0-d30b-64ae-192f-fb45af2423f5
+-//W3C//ELEMENTS XHTML Server-side Image Maps 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-ssismap-1.mod
+95241940-b93a-a316-7d28-7c5f232aa80e
+-//W3C//ELEMENTS XHTML Param Element 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-param-1.mod
+699f3284-e461-b118-d320-e552cf8444ab
+-//W3C//ELEMENTS XHTML Embedded Object 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-object-1.mod
+4b984d09-eed4-c0d1-64f5-920055e1f648
+-//W3C//ELEMENTS XHTML Tables 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-table-1.mod
+58c3fc47-8201-aaff-c934-9a0c1043d8dd
+-//W3C//ELEMENTS XHTML Forms 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-form-1.mod
+6abaee9c-dc76-273b-5f18-b5d48176905f
+-//W3C//ELEMENTS XHTML Target 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-target-1.mod
+89a97f23-7dfa-47ab-8ec3-2a5ab553ca8b
+-//W3C//ELEMENTS XHTML Document Structure 1.0//EN
+http://www.w3.org/MarkUp/DTD/xhtml-struct-1.mod
