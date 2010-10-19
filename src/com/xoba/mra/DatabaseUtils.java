@@ -25,12 +25,96 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.sql.DataSource;
+
 public class DatabaseUtils {
 
 	private static final ILogger logger = LogFactory.getDefault().create();
 
-	public static ICSVProvider runQuery(Connection c, String query)
-			throws Exception {
+	public static void dumpCSVToPrintWriter(ICSVProvider csv, PrintWriter pw, char sep, String naValue) {
+
+		logger.debugf("dumping csv: %s", csv.getColumnNames());
+
+		SortedMap<Integer, String> header = csv.getColumnNames();
+
+		{
+			Iterator<String> it = header.values().iterator();
+			while (it.hasNext()) {
+				pw.print(it.next());
+				if (it.hasNext()) {
+					pw.print(sep);
+				}
+			}
+			pw.println();
+		}
+
+		for (SortedMap<Integer, Object> row : csv) {
+
+			Iterator<Integer> it = header.keySet().iterator();
+			while (it.hasNext()) {
+
+				Integer i = it.next();
+
+				if (row.containsKey(i)) {
+
+					Object cell = row.get(i);
+
+					if (cell == null) {
+						pw.print(naValue);
+					} else {
+						if (cell instanceof Number) {
+
+							Number n = (Number) cell;
+
+							if (n instanceof Double) {
+								Double v = (Double) n;
+								if (Double.isNaN(v) || Double.isInfinite(v)) {
+									pw.print(naValue);
+								} else {
+									pw.print(v);
+								}
+							} else if (n instanceof Float) {
+								Float v = (Float) n;
+								if (Float.isNaN(v) || Float.isInfinite(v)) {
+									pw.print(naValue);
+								} else {
+									pw.print(v);
+								}
+							} else {
+								pw.print(n);
+							}
+						} else {
+							String s = cell.toString();
+							if (s.length() == 0) {
+								pw.print(naValue);
+							} else {
+								pw.print(s);
+							}
+						}
+					}
+				} else {
+					pw.print(naValue);
+				}
+
+				if (it.hasNext()) {
+					pw.print(sep);
+				}
+			}
+			pw.println();
+		}
+
+	}
+
+	public static ICSVProvider runQuery(DataSource ds, String query) throws Exception {
+		Connection c = ds.getConnection();
+		try {
+			return runQuery(c, query);
+		} finally {
+			c.close();
+		}
+	}
+
+	public static ICSVProvider runQuery(Connection c, String query) throws Exception {
 		logger.debugf("running query: %s", query);
 		Statement s = c.createStatement();
 		try {
@@ -74,10 +158,12 @@ public class DatabaseUtils {
 
 		return new AbstractCSVProvider() {
 
+			@Override
 			public Iterator<SortedMap<Integer, Object>> iterator() {
 				return Collections.unmodifiableList(rows).iterator();
 			}
 
+			@Override
 			public SortedMap<Integer, String> getColumnNames() {
 				return Collections.unmodifiableSortedMap(labels);
 			}
@@ -167,8 +253,7 @@ public class DatabaseUtils {
 		return out.toByteArray();
 	}
 
-	public static String dumpCSV(ICSVProvider csv, long maxRows)
-			throws Exception {
+	public static String dumpCSV(ICSVProvider csv, long maxRows) throws Exception {
 		return dumpCSV(csv, maxRows, 11, false, null);
 	}
 
@@ -208,8 +293,7 @@ public class DatabaseUtils {
 		return new WrapperCSV(rows);
 	}
 
-	public static String rawDump(ICSVProvider csv, String delim,
-			String missingValueString) throws Exception {
+	public static String rawDump(ICSVProvider csv, String delim, String missingValueString) throws Exception {
 
 		if (csv == null) {
 			csv = getNullCSV();
@@ -275,8 +359,8 @@ public class DatabaseUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String dumpCSV(ICSVProvider csv, long maxRows, int minWidth,
-			boolean html, Set<String> highlighed) throws Exception {
+	public static String dumpCSV(ICSVProvider csv, long maxRows, int minWidth, boolean html, Set<String> highlighed)
+			throws Exception {
 
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 		df.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -324,11 +408,9 @@ public class DatabaseUtils {
 								} else if (o instanceof BigDecimal) {
 									pw.format("%g", o);
 								} else if (o instanceof AtomicInteger) {
-									pw.format("%d",
-											((AtomicInteger) o).intValue());
+									pw.format("%d", ((AtomicInteger) o).intValue());
 								} else if (o instanceof AtomicLong) {
-									pw.format("%d",
-											((AtomicLong) o).longValue());
+									pw.format("%d", ((AtomicLong) o).longValue());
 								} else {
 									pw.format("%d", o);
 								}
@@ -355,8 +437,7 @@ public class DatabaseUtils {
 		PrintWriter pw = new PrintWriter(sw);
 
 		if (reachedMax) {
-			pw.printf("WARNING: rows %,d to %,d not shown below", maxRows + 1,
-					rowCount);
+			pw.printf("WARNING: rows %,d to %,d not shown below", maxRows + 1, rowCount);
 			pw.println();
 		}
 
@@ -423,8 +504,7 @@ public class DatabaseUtils {
 					Integer i = it.next();
 					String s = labels.get(i);
 					if (html && hl.contains(i)) {
-						pw.printf("| <span class='hl'>%-" + lengths.get(i)
-								+ "s</span> ", s);
+						pw.printf("| <span class='hl'>%-" + lengths.get(i) + "s</span> ", s);
 					} else {
 						pw.printf("| %-" + lengths.get(i) + "s ", s);
 					}
@@ -443,20 +523,13 @@ public class DatabaseUtils {
 						if (row.containsKey(i)) {
 							String s = row.get(i);
 							if (html && hl.contains(i)) {
-								pw.printf(
-										"| <span class='hl'>%-"
-												+ lengths.get(i) + "s</span> ",
-										s == null ? "" : s);
+								pw.printf("| <span class='hl'>%-" + lengths.get(i) + "s</span> ", s == null ? "" : s);
 							} else {
-								pw.printf("| %-" + lengths.get(i) + "s ",
-										s == null ? "" : s);
+								pw.printf("| %-" + lengths.get(i) + "s ", s == null ? "" : s);
 							}
 						} else {
 							if (html && hl.contains(i)) {
-								pw.printf(
-										"| <span class='hl'>%-"
-												+ lengths.get(i) + "s</span> ",
-										"");
+								pw.printf("| <span class='hl'>%-" + lengths.get(i) + "s</span> ", "");
 							} else {
 								pw.printf("| %-" + lengths.get(i) + "s ", "");
 							}
