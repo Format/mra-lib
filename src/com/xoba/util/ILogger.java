@@ -1,4 +1,4 @@
-package com.xoba.mra;
+package com.xoba.util;
 
 public interface ILogger {
 
