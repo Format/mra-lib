@@ -1,4 +1,4 @@
-package com.xoba.mra;
+package com.xoba.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -306,6 +306,17 @@ public class MraStats {
 			out.put(value, out.get(value) + 1);
 		}
 		return out;
+	}
+
+	public static double calcEffectiveNumber(Collection<? extends Number> weights) {
+		double m1 = 0;
+		double m2 = 0;
+		for (Number y : weights) {
+			double x = y.doubleValue();
+			m1 += Math.abs(x);
+			m2 += x * x;
+		}
+		return m1 * m1 / m2;
 	}
 
 }

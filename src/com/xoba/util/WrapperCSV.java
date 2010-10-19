@@ -1,4 +1,4 @@
-package com.xoba.mra;
+package com.xoba.util;
 
 import java.util.Collections;
 import java.util.HashMap;

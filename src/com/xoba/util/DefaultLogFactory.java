@@ -1,9 +1,9 @@
-package com.xoba.mra;
+package com.xoba.util;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.xoba.mra.LogFactory.MyLogger;
+import com.xoba.util.LogFactory.MyLogger;
 
 public final class DefaultLogFactory implements ILogFactory {
 

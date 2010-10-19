@@ -1,4 +1,4 @@
-package com.xoba.mra;
+package com.xoba.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
