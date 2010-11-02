@@ -57,7 +57,11 @@ public class LongCounter<T> {
 		return Collections.unmodifiableMap(map).entrySet().iterator();
 	}
 
-	public long size() {
+	public int size() {
+		return map.size();
+	}
+
+	public long sum() {
 		long out = 0;
 		for (Long x : map.values()) {
 			out += x;

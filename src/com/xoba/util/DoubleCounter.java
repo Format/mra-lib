@@ -57,7 +57,11 @@ public class DoubleCounter<T> {
 		return Collections.unmodifiableMap(map).entrySet().iterator();
 	}
 
-	public double size() {
+	public int size() {
+		return map.size();
+	}
+
+	public double sum() {
 		double out = 0;
 		for (Double x : map.values()) {
 			out += x;
