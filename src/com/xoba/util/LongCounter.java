@@ -1,12 +1,13 @@
 package com.xoba.util;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class LongCounter<T> {
+public class LongCounter<T> implements Iterable<Map.Entry<T, Long>> {
 
 	@Override
 	public String toString() {
@@ -47,6 +48,10 @@ public class LongCounter<T> {
 
 	public Set<T> keySet() {
 		return Collections.unmodifiableMap(map).keySet();
+	}
+
+	public Collection<Long> values() {
+		return Collections.unmodifiableMap(map).values();
 	}
 
 	public Map<T, Long> getSorted(boolean ascending) {
