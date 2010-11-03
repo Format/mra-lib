@@ -976,7 +976,7 @@ public class MraUtils {
 	}
 
 	public static <K, T> Map<K, T> runIdempotentJobsWithRetries(int threads, Map<K, ? extends Callable<T>> tasks,
-			final int maxRounds) throws Exception {
+			final int maxRounds) {
 		ExecutorService es = Executors.newFixedThreadPool(threads);
 		try {
 			return runIdempotentJobsWithRetries(es, tasks, maxRounds);
@@ -986,7 +986,7 @@ public class MraUtils {
 	}
 
 	public static <K, T> Map<K, T> runIdempotentJobsWithRetries(ExecutorService es,
-			Map<K, ? extends Callable<T>> tasks, final int maxRounds) throws Exception {
+			Map<K, ? extends Callable<T>> tasks, final int maxRounds) {
 
 		Map<K, T> out = new HashMap<K, T>();
 
