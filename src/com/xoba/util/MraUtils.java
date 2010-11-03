@@ -1024,7 +1024,7 @@ public class MraUtils {
 		}
 
 		if (remainingTasks.size() > 0) {
-			throw new Exception("not all tasks completed");
+			logger.warnf("%,d tasks not completed", remainingTasks.size());
 		}
 
 		return out;
