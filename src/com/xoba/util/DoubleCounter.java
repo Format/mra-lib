@@ -7,22 +7,22 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class LongCounter<T> implements Iterable<Map.Entry<T, Long>> {
+public class DoubleCounter<T> implements Iterable<Map.Entry<T, Double>> {
 
 	@Override
 	public String toString() {
 		return map.toString();
 	}
 
-	private Map<T, Long> map = new HashMap<T, Long>();
+	private Map<T, Double> map = new HashMap<T, Double>();
 
 	private boolean immutable = false;
 
 	public void inc(T key) {
-		inc(key, 1);
+		inc(key, 1.0);
 	}
 
-	public void inc(T key, long x) {
+	public void inc(T key, double x) {
 		if (immutable) {
 			throw new IllegalStateException("immutable");
 		}
@@ -37,8 +37,8 @@ public class LongCounter<T> implements Iterable<Map.Entry<T, Long>> {
 		this.immutable = true;
 	}
 
-	public long get(T key) {
-		Long out = map.get(key);
+	public double get(T key) {
+		Double out = map.get(key);
 		if (out == null) {
 			return 0;
 		} else {
@@ -50,15 +50,15 @@ public class LongCounter<T> implements Iterable<Map.Entry<T, Long>> {
 		return Collections.unmodifiableMap(map).keySet();
 	}
 
-	public Collection<Long> values() {
+	public Collection<Double> values() {
 		return Collections.unmodifiableMap(map).values();
 	}
 
-	public Map<T, Long> getSorted(boolean ascending) {
+	public Map<T, Double> getSorted(boolean ascending) {
 		return MraUtils.sortByComparableValues(map, ascending);
 	}
 
-	public Iterator<Map.Entry<T, Long>> iterator() {
+	public Iterator<Map.Entry<T, Double>> iterator() {
 		return Collections.unmodifiableMap(map).entrySet().iterator();
 	}
 
@@ -66,9 +66,9 @@ public class LongCounter<T> implements Iterable<Map.Entry<T, Long>> {
 		return map.size();
 	}
 
-	public long sum() {
-		long out = 0;
-		for (Long x : map.values()) {
+	public double sum() {
+		double out = 0;
+		for (Double x : map.values()) {
 			out += x;
 		}
 		return out;
