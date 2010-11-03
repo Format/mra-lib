@@ -976,17 +976,17 @@ public class MraUtils {
 	}
 
 	public static <K, T> Map<K, T> runIdempotentJobsWithRetries(int threads, Map<K, ? extends Callable<T>> tasks,
-			final int maxRetryRounds) throws Exception {
+			final int maxRounds) throws Exception {
 		ExecutorService es = Executors.newFixedThreadPool(threads);
 		try {
-			return runIdempotentJobsWithRetries(es, tasks, maxRetryRounds);
+			return runIdempotentJobsWithRetries(es, tasks, maxRounds);
 		} finally {
 			es.shutdown();
 		}
 	}
 
 	public static <K, T> Map<K, T> runIdempotentJobsWithRetries(ExecutorService es,
-			Map<K, ? extends Callable<T>> tasks, final int maxRetryRounds) throws Exception {
+			Map<K, ? extends Callable<T>> tasks, final int maxRounds) throws Exception {
 
 		Map<K, T> out = new HashMap<K, T>();
 
@@ -994,7 +994,7 @@ public class MraUtils {
 
 		long round = 0;
 
-		while (remainingTasks.size() > 0 && round++ < maxRetryRounds) {
+		while (remainingTasks.size() > 0 && round++ < maxRounds) {
 
 			List<K> keys = new LinkedList<K>(remainingTasks);
 			Collections.shuffle(keys);
