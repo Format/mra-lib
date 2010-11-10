@@ -1,8 +1,10 @@
 package com.xoba.util;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.TimeZone;
 
 public class LogFactory {
@@ -21,8 +23,7 @@ public class LogFactory {
 
 	static final class MyLogger implements ILogger {
 
-		private final DateFormat df = new SimpleDateFormat(
-				"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 		private final String name;
 
 		public MyLogger(String name) {
@@ -34,15 +35,23 @@ public class LogFactory {
 			core("DEBUG", fmt, null, args);
 		}
 
-		public synchronized void core(String type, String fmt, Throwable t,
-				Object... args) {
-			System.out.printf("%5s %s %s: ", type, df.format(new Date()), name);
+		public synchronized void core(String type, String fmt, Throwable t, Object... args) {
+
+			Formatter formatter = new Formatter();
+
+			formatter.format("%5s %s %s: ", type, df.format(new Date()), name);
+
 			if (args == null) {
-				System.out.print(fmt);
+				try {
+					formatter.out().append(fmt);
+				} catch (IOException e) {
+				}
 			} else {
-				System.out.printf(fmt, args);
+				formatter.format(fmt, args);
 			}
-			System.out.println();
+
+			System.out.println(formatter);
+
 			if (t != null) {
 				t.printStackTrace(System.out);
 			}
