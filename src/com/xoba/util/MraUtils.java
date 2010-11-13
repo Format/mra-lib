@@ -1030,4 +1030,33 @@ public class MraUtils {
 		return out;
 	}
 
+	public static double calcRadians(double x, double y) {
+	
+		double theta = 0;
+	
+		if (x >= 0) {
+			if (y >= 0) {
+				// QUAD 1
+				theta = Math.atan(y / x);
+			} else {
+				// QUAD 4
+				theta = 2 * Math.PI - Math.atan(-y / x);
+			}
+		} else {
+			if (y > 0) {
+				// QUAD 2
+				theta = Math.PI - Math.atan(-y / x);
+			} else {
+				// QUAD 3
+				theta = Math.PI + Math.atan(y / x);
+			}
+		}
+	
+		return theta;
+	}
+
+	public static double[] calcCoords(double radians) {
+		return new double[] { Math.cos(radians), Math.sin(radians) };
+	}
+
 }
