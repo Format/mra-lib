@@ -21,6 +21,10 @@ public class LogFactory {
 
 	private static ILogFactory SINGLETON;
 
+	private static enum Level {
+		DEBUG, WARN, INFO, ERROR;
+	}
+
 	static final class MyLogger implements ILogger {
 
 		private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -31,15 +35,11 @@ public class LogFactory {
 			df.setTimeZone(TimeZone.getTimeZone("GMT"));
 		}
 
-		public void debugf(String fmt, Object... args) {
-			core("DEBUG", fmt, null, args);
-		}
-
-		public synchronized void core(String type, String fmt, Throwable t, Object... args) {
+		public synchronized void core(Level level, String fmt, Throwable t, Object... args) {
 
 			Formatter formatter = new Formatter();
 
-			formatter.format("%5s %s %s: ", type, df.format(new Date()), name);
+			formatter.format("%5s %s %s: ", level, df.format(new Date()), name);
 
 			if (args == null) {
 				try {
@@ -57,17 +57,36 @@ public class LogFactory {
 			}
 		}
 
-		public void warn(String fmt, Throwable t, Object... args) {
-			core("WARN", fmt, t, args);
+		public void debug(Object msg) {
+			core(Level.DEBUG, "%s", null, msg);
+		}
 
+		public void warn(Object msg) {
+			core(Level.WARN, "%s", null, msg);
+		}
+
+		public void info(Object msg) {
+			core(Level.INFO, "%s", null, msg);
+		}
+
+		public void warn(String fmt, Throwable t, Object... args) {
+			core(Level.WARN, fmt, t, args);
+		}
+
+		public void debugf(String fmt, Object... args) {
+			core(Level.DEBUG, fmt, null, args);
+		}
+
+		public void infof(String fmt, Object... args) {
+			core(Level.INFO, fmt, null, args);
 		}
 
 		public void warnf(String fmt, Object... args) {
-			core("WARN", fmt, null, args);
+			core(Level.WARN, fmt, null, args);
 		}
 
 		public void errorf(String fmt, Object... args) {
-			core("ERROR", fmt, null, args);
+			core(Level.ERROR, fmt, null, args);
 		}
 	}
 

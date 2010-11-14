@@ -27,6 +27,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -56,6 +57,23 @@ public class MraUtils {
 	}
 
 	public static final String US_ASCII = "US-ASCII";
+
+	public static Map<String, String> parseCommandLineArgs(String... args) {
+		Map<String, String> out = new HashMap<String, String>();
+		for (String a : args) {
+			String[] split = a.trim().split("=");
+			if (split.length == 2) {
+				out.put(split[0].trim(), split[1].trim());
+			} else {
+				logger.warnf("ignoring argument \"%s\"", a);
+			}
+		}
+		return out;
+	}
+
+	public static String formatZeroDecimals(Number x) {
+		return new Formatter().format("%,.0f", x == null ? Double.NaN : x.doubleValue()).toString();
+	}
 
 	public static Dimension getMaxWindowDimension(double fraction) {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -100,6 +118,10 @@ public class MraUtils {
 
 	public static String md5Hash(InputStream in) throws IOException {
 		return hash(in, "MD5");
+	}
+
+	public static String sha1Hash(InputStream in) throws IOException {
+		return hash(in, "SHA1");
 	}
 
 	public static String hash(File f, String algo) throws IOException {
@@ -1031,9 +1053,9 @@ public class MraUtils {
 	}
 
 	public static double calcRadians(double x, double y) {
-	
+
 		double theta = 0;
-	
+
 		if (x >= 0) {
 			if (y >= 0) {
 				// QUAD 1
@@ -1051,7 +1073,7 @@ public class MraUtils {
 				theta = Math.PI + Math.atan(y / x);
 			}
 		}
-	
+
 		return theta;
 	}
 

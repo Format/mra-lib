@@ -158,12 +158,10 @@ public class DatabaseUtils {
 
 		return new AbstractCSVProvider() {
 
-			@Override
 			public Iterator<SortedMap<Integer, Object>> iterator() {
 				return Collections.unmodifiableList(rows).iterator();
 			}
 
-			@Override
 			public SortedMap<Integer, String> getColumnNames() {
 				return Collections.unmodifiableSortedMap(labels);
 			}
