@@ -1,6 +1,14 @@
 package com.xoba.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigDecimal;
@@ -15,6 +23,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -542,6 +551,60 @@ public class DatabaseUtils {
 
 		pw.close();
 		return sw.toString();
+	}
+
+	public static void dumpCSVToSimpleFile(File out, char sep, ICSVProvider csv) throws IOException {
+		PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(out)));
+		SortedMap<Integer, String> header = csv.getColumnNames();
+		{
+			Iterator<Integer> it = header.keySet().iterator();
+			while (it.hasNext()) {
+				Integer i = it.next();
+				pw.print(header.get(i));
+				if (it.hasNext()) {
+					pw.print(sep);
+				}
+			}
+			pw.println();
+		}
+		for (SortedMap<Integer, Object> row : csv) {
+			Iterator<Integer> it = row.keySet().iterator();
+			while (it.hasNext()) {
+				Integer i = it.next();
+				pw.print(row.get(i));
+				if (it.hasNext()) {
+					pw.print(sep);
+				}
+			}
+			pw.println();
+	
+		}
+		pw.close();
+	}
+
+	public static ICSVProvider loadCSV(InputStream in, String sep) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(in)));
+		try {
+			String[] header = reader.readLine().split(sep);
+			List<Map<String, Object>> rows = new LinkedList<Map<String, Object>>();
+			boolean done = false;
+			while (!done) {
+				String line = reader.readLine();
+				if (line == null) {
+					done = true;
+				} else {
+					String[] parts = line.split(sep);
+					Map<String, Object> row = new LinkedHashMap<String, Object>();
+					for (int i = 0; i < header.length; i++) {
+						row.put(header[i], parts[i]);
+					}
+					rows.add(row);
+				}
+			}
+			return new WrapperCSV(rows);
+		} finally {
+			reader.close();
+		}
 	}
 
 }
