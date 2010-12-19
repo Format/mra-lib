@@ -19,7 +19,7 @@ public class WrapperCSV extends AbstractCSVProvider {
 
 	public WrapperCSV(List<Map<String, Object>> rowsByString) {
 		Set<String> cols = new LinkedHashSet<String>();
-		for (Map<String, Object> row : rowsByString) {
+		for (Map<String, ? extends Object> row : rowsByString) {
 			cols.addAll(row.keySet());
 		}
 
@@ -29,7 +29,7 @@ public class WrapperCSV extends AbstractCSVProvider {
 			header.put(n, s);
 			indicies.put(s, n);
 		}
-		for (Map<String, Object> row : rowsByString) {
+		for (Map<String, ? extends Object> row : rowsByString) {
 			SortedMap<Integer, Object> out = new TreeMap<Integer, Object>();
 			for (String s : row.keySet()) {
 				out.put(indicies.get(s), row.get(s));
