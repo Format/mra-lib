@@ -58,6 +58,10 @@ public class LongCounter<T> implements Iterable<Map.Entry<T, Long>> {
 		return MraUtils.sortByComparableValues(map, ascending);
 	}
 
+	public Map<T, Long> getMap() {
+		return new HashMap<T, Long>(map);
+	}
+
 	public Iterator<Map.Entry<T, Long>> iterator() {
 		return Collections.unmodifiableMap(map).entrySet().iterator();
 	}
