@@ -1,5 +1,10 @@
 package com.xoba.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,7 +24,7 @@ public class WrapperCSV extends AbstractCSVProvider {
 
 	public WrapperCSV(List<Map<String, Object>> rowsByString) {
 		Set<String> cols = new LinkedHashSet<String>();
-		for (Map<String, Object> row : rowsByString) {
+		for (Map<String, ? extends Object> row : rowsByString) {
 			cols.addAll(row.keySet());
 		}
 
@@ -29,7 +34,7 @@ public class WrapperCSV extends AbstractCSVProvider {
 			header.put(n, s);
 			indicies.put(s, n);
 		}
-		for (Map<String, Object> row : rowsByString) {
+		for (Map<String, ? extends Object> row : rowsByString) {
 			SortedMap<Integer, Object> out = new TreeMap<Integer, Object>();
 			for (String s : row.keySet()) {
 				out.put(indicies.get(s), row.get(s));
@@ -45,6 +50,31 @@ public class WrapperCSV extends AbstractCSVProvider {
 
 	public Iterator<SortedMap<Integer, Object>> iterator() {
 		return Collections.unmodifiableList(rowsByInteger).iterator();
+	}
+
+	public static ICSVProvider loadCSV(InputStream in, String sep) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(in)));
+		try {
+			String[] header = reader.readLine().split(sep);
+			List<Map<String, Object>> rows = new LinkedList<Map<String, Object>>();
+			boolean done = false;
+			while (!done) {
+				String line = reader.readLine();
+				if (line == null) {
+					done = true;
+				} else {
+					String[] parts = line.split(sep);
+					Map<String, Object> row = new HashMap<String, Object>();
+					for (int i = 0; i < header.length; i++) {
+						row.put(header[i], parts[i]);
+					}
+					rows.add(row);
+				}
+			}
+			return new WrapperCSV(rows);
+		} finally {
+			reader.close();
+		}
 	}
 
 }
