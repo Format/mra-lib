@@ -1,5 +1,6 @@
 package com.xoba.util;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,14 +8,16 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class LongCounter<T> implements Iterable<Map.Entry<T, Long>> {
+public class LongCounter<T> implements Iterable<Map.Entry<T, Long>>, Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	public String toString() {
 		return map.toString();
 	}
 
-	private Map<T, Long> map = new HashMap<T, Long>();
+	private final Map<T, Long> map = new HashMap<T, Long>();
 
 	private boolean immutable = false;
 
@@ -62,6 +65,7 @@ public class LongCounter<T> implements Iterable<Map.Entry<T, Long>> {
 		return new HashMap<T, Long>(map);
 	}
 
+	@Override
 	public Iterator<Map.Entry<T, Long>> iterator() {
 		return Collections.unmodifiableMap(map).entrySet().iterator();
 	}
