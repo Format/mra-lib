@@ -18,23 +18,18 @@ import java.util.TreeMap;
  */
 public class MraStats {
 
-	private static final ILogger logger = LogFactory.getDefault().create();
-
 	private MraStats() {
 	}
 
-	public static double getPercentile(Collection<? extends Number> c,
-			double fraction) {
+	public static double getPercentile(Collection<? extends Number> c, double fraction) {
 		return getPercentiles(c, new double[] { fraction })[0];
 	}
 
-	public final static double[] getQuintiles(
-			final Collection<? extends Number> c) {
+	public final static double[] getQuintiles(final Collection<? extends Number> c) {
 		return getPercentiles(c, new double[] { 0, 0.2, 0.4, 0.6, 0.8, 1.0 });
 	}
 
-	public final static double[] getPercentiles(
-			final Collection<? extends Number> c, List<Double> fractions) {
+	public final static double[] getPercentiles(final Collection<? extends Number> c, List<Double> fractions) {
 		double[] array1 = new double[fractions.size()];
 		Double[] array2 = fractions.toArray(new Double[fractions.size()]);
 		for (int i = 0; i < array2.length; i++) {
@@ -43,8 +38,7 @@ public class MraStats {
 		return getPercentiles(c, array1);
 	}
 
-	public final static double[] getPercentiles(
-			final Collection<? extends Number> c, double[] fractions) {
+	public final static double[] getPercentiles(final Collection<? extends Number> c, double[] fractions) {
 
 		final List<Double> list = new ArrayList<Double>();
 		for (final Number n : c) {
@@ -98,8 +92,7 @@ public class MraStats {
 		return out;
 	}
 
-	public static final List<Double> removeNaNsAndInfinites(
-			Collection<? extends Number> c) {
+	public static final List<Double> removeNaNsAndInfinites(Collection<? extends Number> c) {
 		List<Double> out = new LinkedList<Double>();
 		for (Number n : c) {
 			double v = n.doubleValue();
@@ -110,8 +103,7 @@ public class MraStats {
 		return out;
 	}
 
-	public static final List<Double> removeInfinites(
-			Collection<? extends Number> c) {
+	public static final List<Double> removeInfinites(Collection<? extends Number> c) {
 		List<Double> out = new LinkedList<Double>();
 		for (Number n : c) {
 			double v = n.doubleValue();
@@ -175,8 +167,7 @@ public class MraStats {
 		return min;
 	}
 
-	public static <T> T weightedRandomChoice(Map<T, ? extends Number> map,
-			Random r) {
+	public static <T> T weightedRandomChoice(Map<T, ? extends Number> map, Random r) {
 		double sum = sum(map.values());
 		T out = null;
 		double selection = sum * r.nextDouble();
@@ -195,8 +186,7 @@ public class MraStats {
 	/**
 	 * returns probability distribution
 	 */
-	public static SortedMap<Double, Double> getProbabilityDistribution(
-			Collection<Double> numbers, int n) {
+	public static SortedMap<Double, Double> getProbabilityDistribution(Collection<Double> numbers, int n) {
 		SortedMap<Integer, Integer> counts = new TreeMap<Integer, Integer>();
 		final double min = min(numbers);
 		final double max = max(numbers);
@@ -255,16 +245,14 @@ public class MraStats {
 		return sum / (c.size() - 1.0);
 	}
 
-	public static final <T> double biasedCovariance(Map<T, ? extends Number> a,
-			Map<T, ? extends Number> b) {
+	public static final <T> double biasedCovariance(Map<T, ? extends Number> a, Map<T, ? extends Number> b) {
 		double sum = 0;
 		final double aMean = mean(a.values());
 		final double bMean = mean(b.values());
 		double n = 0;
 		for (T key : a.keySet()) {
 			if (a.containsKey(key) && b.containsKey(key)) {
-				sum += ((a.get(key).doubleValue() - aMean) * (b.get(key)
-						.doubleValue() - bMean));
+				sum += ((a.get(key).doubleValue() - aMean) * (b.get(key).doubleValue() - bMean));
 				n++;
 			}
 		}
@@ -274,10 +262,8 @@ public class MraStats {
 		return sum / n;
 	}
 
-	public static <T> double biasedCorrelation(Map<T, ? extends Number> a,
-			Map<T, ? extends Number> b) {
-		return biasedCovariance(a, b)
-				/ Math.sqrt(variance(a.values()) * variance(b.values()));
+	public static <T> double biasedCorrelation(Map<T, ? extends Number> a, Map<T, ? extends Number> b) {
+		return biasedCovariance(a, b) / Math.sqrt(variance(a.values()) * variance(b.values()));
 	}
 
 	public static double standardDeviation(Collection<? extends Number> numbers) {
@@ -292,8 +278,7 @@ public class MraStats {
 		return Math.sqrt(variance(numbers) / numbers.size());
 	}
 
-	public static <T> SortedMap<T, Double> sortedNormalize(
-			SortedMap<T, Double> map) {
+	public static <T> SortedMap<T, Double> sortedNormalize(SortedMap<T, Double> map) {
 		return new TreeMap<T, Double>(normalize(map));
 	}
 
@@ -329,8 +314,7 @@ public class MraStats {
 		return calcEffectiveNumber(list);
 	}
 
-	public static double calcEffectiveNumber(
-			Collection<? extends Number> weights) {
+	public static double calcEffectiveNumber(Collection<? extends Number> weights) {
 		double m1 = 0;
 		double m2 = 0;
 		for (Number y : weights) {

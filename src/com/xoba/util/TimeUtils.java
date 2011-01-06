@@ -9,8 +9,6 @@ import java.util.TimeZone;
 
 public class TimeUtils {
 
-	private static final ILogger logger = LogFactory.getDefault().create();
-
 	private static DateFormat D8 = new SimpleDateFormat("yyyyMMdd");
 	private static DateFormat D9 = new SimpleDateFormat("yyyyMMdd'Z'");
 	private static DateFormat D10 = new SimpleDateFormat("yyyy-MM-dd");

@@ -51,11 +51,10 @@ public class FileCache implements ICache {
 
 	@SuppressWarnings("unchecked")
 	private static <T> T getObjectFromFile(File file, boolean compressed) throws Exception {
-		long start = System.currentTimeMillis();
 		ObjectInputStream in = getInput(file, compressed);
 		try {
-			Date day = (Date) in.readObject();
-			String objectDescription = (String) in.readObject();
+			in.readObject();
+			in.readObject();
 			Object o = in.readObject();
 			return (T) o;
 		} catch (ClassNotFoundException e) {
@@ -66,7 +65,6 @@ public class FileCache implements ICache {
 			throw e;
 		} finally {
 			in.close();
-			long end = System.currentTimeMillis();
 		}
 	}
 
@@ -105,39 +103,40 @@ public class FileCache implements ICache {
 		return new File(dir, key);
 	}
 
+	@Override
 	public Date getDateObjectStored(String key) {
 		return new Date(getFileForKey(key).lastModified());
 	}
 
+	@Override
 	public long getStoredSizeEstimate(String key) {
 		return getFileForKey(key).length();
 	}
 
+	@Override
 	public Object getObject(String key) throws Exception {
 		return getObjectFromFile(getFileForKey(key), compressed);
 	}
 
+	@Override
 	public boolean hasObjectForKey(String key) {
 		return getFileForKey(key).exists();
 	}
 
+	@Override
 	public boolean removeObject(String key) {
 		return getFileForKey(key).delete();
 	}
 
+	@Override
 	public void storeObject(String key, Object o) throws Exception {
 		putObjectToFile(getFileForKey(key), "stored by " + FileCache.class, o, compressed);
 	}
 
+	@Override
 	public Iterator<String> iterator() {
 		String[] children = dir.list();
 		return Arrays.asList(children).iterator();
-	}
-
-	private static void dumpCache(ICache c) throws Exception {
-		for (String key : c) {
-			logger.debugf("dumped key '%s': object is '%s'", key, c.getObject(key));
-		}
 	}
 
 }
