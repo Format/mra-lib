@@ -21,6 +21,12 @@ public class LongCounter<T> implements Iterable<Map.Entry<T, Long>>, Serializabl
 
 	private boolean immutable = false;
 
+	public void accumulate(LongCounter<T> o) {
+		for (T key : o.keySet()) {
+			inc(key, o.get(key));
+		}
+	}
+
 	public void inc(T key) {
 		inc(key, 1);
 	}
