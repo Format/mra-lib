@@ -541,6 +541,7 @@ public class MraUtils {
 	public static <A, B> Map<A, B> sortByValues(Map<A, B> map, final Comparator<B> comp) {
 		List<Map.Entry<A, B>> entries = new LinkedList<Entry<A, B>>(map.entrySet());
 		Collections.sort(entries, new Comparator<Map.Entry<A, B>>() {
+			@Override
 			public int compare(Entry<A, B> o1, Entry<A, B> o2) {
 				return comp.compare(o1.getValue(), o2.getValue());
 			}
@@ -556,6 +557,7 @@ public class MraUtils {
 		List<Map.Entry<A, B>> entries = new LinkedList<Entry<A, B>>(map.entrySet());
 		final int sign = ascending ? 1 : -1;
 		Collections.sort(entries, new Comparator<Map.Entry<A, B>>() {
+			@Override
 			public int compare(Entry<A, B> o1, Entry<A, B> o2) {
 				return sign * o1.getValue().compareTo(o2.getValue());
 			}
@@ -637,8 +639,8 @@ public class MraUtils {
 		return out;
 	}
 
-	public static SortedSet<Double> getLogRange(double min, double max, int n) {
-		SortedSet<Double> out = new TreeSet<Double>();
+	public static List<Double> getLogRange(double min, double max, int n) {
+		List<Double> out = new LinkedList<Double>();
 		double logMin = Math.log(min);
 		double logMax = Math.log(max);
 		double dx = (logMax - logMin) / (n - 1);
@@ -649,8 +651,8 @@ public class MraUtils {
 		return out;
 	}
 
-	public static SortedSet<Double> getUniformRange(double min, double max, int n) {
-		SortedSet<Double> out = new TreeSet<Double>();
+	public static List<Double> getUniformRange(double min, double max, int n) {
+		List<Double> out = new LinkedList<Double>();
 		double dx = (max - min) / (n - 1);
 		for (int i = 0; i < n; i++) {
 			double log = min + i * dx;
@@ -693,6 +695,7 @@ public class MraUtils {
 				}
 			}
 
+			@Override
 			public boolean hasNext() {
 				try {
 					if (done) {
@@ -715,6 +718,7 @@ public class MraUtils {
 				}
 			}
 
+			@Override
 			public String next() {
 				try {
 					if (done) {
@@ -739,10 +743,12 @@ public class MraUtils {
 				}
 			}
 
+			@Override
 			public void remove() {
 				throw new UnsupportedOperationException("can't remove from file " + f);
 			}
 
+			@Override
 			public void close() {
 				try {
 					done();
@@ -858,6 +864,11 @@ public class MraUtils {
 	}
 
 	public static void main(String... args) throws Exception {
+
+		logger.debugf("range1 = %s", getLogRange(30, 0.1, 10));
+		logger.debugf("range2 = %s", getUniformRange(30, 0.1, 10));
+
+		System.exit(0);
 
 		String a = "c0000";
 		String b = "c0000";
