@@ -35,20 +35,22 @@ public class XHtmlUtils {
 			if (e.getSystemId() == null) {
 				logger.warnf("line %,d: %s", e.getLineNumber(), e.getMessage());
 			} else {
-				logger.warnf("%s line %,d: %s", e.getSystemId(),
-						e.getLineNumber(), e.getMessage());
+				logger.warnf("%s line %,d: %s", e.getSystemId(), e.getLineNumber(), e.getMessage());
 			}
 		}
 
+		@Override
 		public void warning(SAXParseException exception) throws SAXException {
 			log(exception);
 		}
 
+		@Override
 		public void error(SAXParseException exception) throws SAXException {
 			log(exception);
 			hasErrors = true;
 		}
 
+		@Override
 		public void fatalError(SAXParseException exception) throws SAXException {
 			log(exception);
 			hasErrors = true;
@@ -68,19 +70,16 @@ public class XHtmlUtils {
 
 		private EntityResolver parent;
 
-		public InputSource resolveEntity(String publicId, String systemId)
-				throws SAXException, IOException {
+		@Override
+		public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
 			if (publicId != null) {
 				if (publicId.equals("-//W3C//DTD XHTML 1.0 Transitional//EN")) {
 					return XHtmlUtils.getInputSource("xhtml1-transitional.dtd");
-				} else if (publicId
-						.equals("-//W3C//ENTITIES Latin 1 for XHTML//EN")) {
+				} else if (publicId.equals("-//W3C//ENTITIES Latin 1 for XHTML//EN")) {
 					return XHtmlUtils.getInputSource("xhtml-lat1.ent");
-				} else if (publicId
-						.equals("-//W3C//ENTITIES Symbols for XHTML//EN")) {
+				} else if (publicId.equals("-//W3C//ENTITIES Symbols for XHTML//EN")) {
 					return XHtmlUtils.getInputSource("xhtml-symbol.ent");
-				} else if (publicId
-						.equals("-//W3C//ENTITIES Special for XHTML//EN")) {
+				} else if (publicId.equals("-//W3C//ENTITIES Special for XHTML//EN")) {
 					return XHtmlUtils.getInputSource("xhtml-special.ent");
 				}
 			}
@@ -93,13 +92,11 @@ public class XHtmlUtils {
 		}
 	}
 
-	public static Document parseXhtml(URI u, boolean validating)
-			throws Exception {
+	public static Document parseXhtml(URI u, boolean validating) throws Exception {
 		return parseXhtml(u, new XHTMLResolver(), validating);
 	}
 
-	public static Document parseXhtml(URI u, EntityResolver er,
-			boolean validating) throws Exception {
+	public static Document parseXhtml(URI u, EntityResolver er, boolean validating) throws Exception {
 		DocumentBuilderFactory fact = DocumentBuilderFactory.newInstance();
 		fact.setValidating(validating);
 		fact.setNamespaceAware(true);
@@ -130,8 +127,28 @@ public class XHtmlUtils {
 			builder.parse(html);
 			return !h.hasErrors();
 		} catch (SAXParseException e) {
-			logger.errorf("line %,d; can't validate %s: %s", e.getLineNumber(),
-					html, e);
+			logger.errorf("line %,d; can't validate %s: %s", e.getLineNumber(), html, e);
+			return false;
+		} catch (SAXException e) {
+			logger.errorf("can't validate " + html + ": ", e);
+			return false;
+		} catch (Exception e) {
+			logger.errorf("can't validate " + html + ": ", e);
+			return false;
+		}
+	}
+
+	public static boolean isWellFormedXML(InputSource html) {
+		try {
+			DocumentBuilderFactory fact = DocumentBuilderFactory.newInstance();
+			fact.setNamespaceAware(true);
+			DocumentBuilder builder = fact.newDocumentBuilder();
+			MYErrorHandler h = new MYErrorHandler();
+			builder.setErrorHandler(h);
+			builder.parse(html);
+			return !h.hasErrors();
+		} catch (SAXParseException e) {
+			logger.errorf("line %,d; can't validate %s: %s", e.getLineNumber(), html, e);
 			return false;
 		} catch (SAXException e) {
 			logger.errorf("can't validate " + html + ": ", e);
