@@ -1092,4 +1092,14 @@ public class MraUtils {
 		return new double[] { Math.cos(radians), Math.sin(radians) };
 	}
 
+	public static <T> Set<T> intersection(Set<T> a, Set<T> b) {
+		Set<T> out = new HashSet<T>();
+		for (T item : a) {
+			if (b.contains(item)) {
+				out.add(item);
+			}
+		}
+		return out;
+	}
+
 }
