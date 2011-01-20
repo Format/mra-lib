@@ -1,7 +1,15 @@
 package com.xoba.util.data;
 
+import java.io.File;
+import java.util.Date;
+
+import com.xoba.util.ILogger;
+import com.xoba.util.LogFactory;
+
 public abstract class AbstractManagedData<T> implements IManagedData<T> {
 
+	private static final ILogger logger =LogFactory.getDefault().create();
+	
 	private boolean useDailyManager;
 
 	public static enum Type {
@@ -10,6 +18,27 @@ public abstract class AbstractManagedData<T> implements IManagedData<T> {
 
 		ID_BASED_CACHE_MANAGER;
 
+	}
+
+	public static void main(String... args) throws Exception {
+		
+		IManagedData<String> testData = new AbstractManagedData<String>() {
+
+			public String createData() throws Exception {
+				return "test on " + new Date();
+			}
+
+			@Override
+			public String getID() {
+				return "test123";
+			}
+		};
+
+		IObjectManager om = new ObjectManager(false, new File( "/tmp/om"));
+		
+		String test = om.evaluateData(testData);
+		logger.debugf("got %s",test);
+		
 	}
 
 	public AbstractManagedData() {
