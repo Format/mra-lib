@@ -21,6 +21,18 @@ public class MraStats {
 	private MraStats() {
 	}
 
+	public static double getPercentileOfValue(Collection<? extends Number> c, double value) {
+		Number[] array = c.toArray(new Number[c.size()]);
+		Arrays.sort(array);
+		int index = -1;
+		for (int i = 0; i < array.length && index < 0; i++) {
+			if (value <= array[i].doubleValue()) {
+				index = i;
+			}
+		}
+		return 100.0 * index / (c.size() - 1);
+	}
+
 	public static double getPercentile(Collection<? extends Number> c, double fraction) {
 		return getPercentiles(c, new double[] { fraction })[0];
 	}
