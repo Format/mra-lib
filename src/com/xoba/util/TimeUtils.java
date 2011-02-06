@@ -239,6 +239,13 @@ public class TimeUtils {
 		}
 	}
 
+	public static String formatMillisTimeGMT(long millis) {
+		Date d = new Date(millis);
+		synchronized (GMT_FORMAT_MILLIS) {
+			return GMT_FORMAT_MILLIS.format(d);
+		}
+	}
+
 	public static String formatNanosTimeUSEastern(long nanos) {
 		long millis = nanos / 1000000;
 		Formatter nanosFormat = new Formatter();
