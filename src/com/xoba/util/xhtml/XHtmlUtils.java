@@ -39,18 +39,15 @@ public class XHtmlUtils {
 			}
 		}
 
-		@Override
 		public void warning(SAXParseException exception) throws SAXException {
 			log(exception);
 		}
 
-		@Override
 		public void error(SAXParseException exception) throws SAXException {
 			log(exception);
 			hasErrors = true;
 		}
 
-		@Override
 		public void fatalError(SAXParseException exception) throws SAXException {
 			log(exception);
 			hasErrors = true;
@@ -70,7 +67,6 @@ public class XHtmlUtils {
 
 		private EntityResolver parent;
 
-		@Override
 		public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
 			if (publicId != null) {
 				if (publicId.equals("-//W3C//DTD XHTML 1.0 Transitional//EN")) {

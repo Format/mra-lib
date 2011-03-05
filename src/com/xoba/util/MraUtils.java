@@ -541,7 +541,6 @@ public class MraUtils {
 	public static <A, B> Map<A, B> sortByValues(Map<A, B> map, final Comparator<B> comp) {
 		List<Map.Entry<A, B>> entries = new LinkedList<Entry<A, B>>(map.entrySet());
 		Collections.sort(entries, new Comparator<Map.Entry<A, B>>() {
-			@Override
 			public int compare(Entry<A, B> o1, Entry<A, B> o2) {
 				return comp.compare(o1.getValue(), o2.getValue());
 			}
@@ -557,7 +556,6 @@ public class MraUtils {
 		List<Map.Entry<A, B>> entries = new LinkedList<Entry<A, B>>(map.entrySet());
 		final int sign = ascending ? 1 : -1;
 		Collections.sort(entries, new Comparator<Map.Entry<A, B>>() {
-			@Override
 			public int compare(Entry<A, B> o1, Entry<A, B> o2) {
 				return sign * o1.getValue().compareTo(o2.getValue());
 			}
@@ -695,7 +693,6 @@ public class MraUtils {
 				}
 			}
 
-			@Override
 			public boolean hasNext() {
 				try {
 					if (done) {
@@ -718,7 +715,6 @@ public class MraUtils {
 				}
 			}
 
-			@Override
 			public String next() {
 				try {
 					if (done) {
@@ -743,12 +739,10 @@ public class MraUtils {
 				}
 			}
 
-			@Override
 			public void remove() {
 				throw new UnsupportedOperationException("can't remove from file " + f);
 			}
 
-			@Override
 			public void close() {
 				try {
 					done();
