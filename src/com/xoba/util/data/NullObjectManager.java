@@ -6,7 +6,6 @@ public class NullObjectManager implements IObjectManager {
 		return managedData.createData();
 	}
 
-	@Override
 	public boolean removeDataFromManagement(String id) {
 		return true;
 	}

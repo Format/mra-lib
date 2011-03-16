@@ -71,7 +71,6 @@ public class LongCounter<T> implements Iterable<Map.Entry<T, Long>>, Serializabl
 		return new HashMap<T, Long>(map);
 	}
 
-	@Override
 	public Iterator<Map.Entry<T, Long>> iterator() {
 		return Collections.unmodifiableMap(map).entrySet().iterator();
 	}

@@ -103,37 +103,30 @@ public class FileCache implements ICache {
 		return new File(dir, key);
 	}
 
-	@Override
 	public Date getDateObjectStored(String key) {
 		return new Date(getFileForKey(key).lastModified());
 	}
 
-	@Override
 	public long getStoredSizeEstimate(String key) {
 		return getFileForKey(key).length();
 	}
 
-	@Override
 	public Object getObject(String key) throws Exception {
 		return getObjectFromFile(getFileForKey(key), compressed);
 	}
 
-	@Override
 	public boolean hasObjectForKey(String key) {
 		return getFileForKey(key).exists();
 	}
 
-	@Override
 	public boolean removeObject(String key) {
 		return getFileForKey(key).delete();
 	}
 
-	@Override
 	public void storeObject(String key, Object o) throws Exception {
 		putObjectToFile(getFileForKey(key), "stored by " + FileCache.class, o, compressed);
 	}
 
-	@Override
 	public Iterator<String> iterator() {
 		String[] children = dir.list();
 		return Arrays.asList(children).iterator();
