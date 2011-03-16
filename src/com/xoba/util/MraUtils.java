@@ -1078,4 +1078,17 @@ public class MraUtils {
 		return out;
 	}
 
+	public static String getFileExtension(String name) {
+		char[] array = name.toCharArray();
+		for (int i = 0; i < 10; i++) {
+			int index = array.length - i - 1;
+			if (array[index] == '.') {
+				char[] out = new char[i];
+				System.arraycopy(array, index + 1, out, 0, out.length);
+				return new String(out);
+			}
+		}
+		return "";
+	}
+
 }
