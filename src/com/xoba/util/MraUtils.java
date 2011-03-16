@@ -590,6 +590,10 @@ public class MraUtils {
 	public static <T> SortedMap<Integer, List<T>> splitListIntoRoughlyEqualSizePartsPseudoRandomly(long seed,
 			List<T> list, int parts) {
 
+		if (parts <= 1) {
+			return new TreeMap<Integer, List<T>>(Collections.singletonMap(1, list));
+		}
+
 		Random random = new Random(seed);
 
 		SortedMap<Integer, List<T>> map = new TreeMap<Integer, List<T>>();
@@ -614,29 +618,7 @@ public class MraUtils {
 	}
 
 	public static <T> List<List<T>> splitListIntoRoughlyEqualSizeParts(List<T> list, int parts) {
-		if (parts < 1) {
-			parts = 1;
-		}
-		List<List<T>> out = new LinkedList<List<T>>();
-		int n = list.size();
-		int m = n / parts;
-		List<T> current = new LinkedList<T>();
-		int count = 0;
-		for (T t : list) {
-			if (m == count) {
-				count = 0;
-				if (current.size() > 0) {
-					out.add(current);
-				}
-				current = new LinkedList<T>();
-			}
-			current.add(t);
-			count++;
-		}
-		if (current.size() > 0) {
-			out.add(current);
-		}
-		return out;
+		return new LinkedList<List<T>>(splitListIntoRoughlyEqualSizePartsPseudoRandomly(1, list, parts).values());
 	}
 
 	public static List<Double> getLogRange(double min, double max, int n) {
