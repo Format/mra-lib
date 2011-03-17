@@ -58,6 +58,166 @@ public class MraUtils {
 
 	public static final String US_ASCII = "US-ASCII";
 
+	public static void main(String... args) throws Exception {
+
+		Map<String, IDependentTask<String, Double>> tasks = new HashMap<String, MraUtils.IDependentTask<String, Double>>();
+
+		int n = 100;
+
+		for (int i = 0; i < n; i++) {
+			final int j = n - i - 1;
+			final String id = "task-" + j;
+			final Set<String> depends = new HashSet<String>();
+			depends.add("task-" + (j - 1));
+			depends.add("task-" + (j - 2));
+			if (j < 2) {
+				depends.clear();
+			}
+			tasks.put(id, new IDependentTask<String, Double>() {
+				@Override
+				public String getTaskID() {
+					return id;
+				}
+
+				@Override
+				public Double call(Map<String, Double> priorResults) throws Exception {
+					logger.debugf("running %s in %s", id, Thread.currentThread());
+					if (Math.random() < 0.3) {
+						throw new Exception();
+					}
+					if (j < 2) {
+						return new Double(j);
+					}
+					double out = 0;
+					for (String s : getDependsOn()) {
+						out += priorResults.get(s);
+					}
+					return out;
+				}
+
+				@Override
+				public Set<String> getDependsOn() {
+					return depends;
+				}
+			});
+		}
+
+		ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+		try {
+			Map<String, Double> results = runIdempotentTasks(tasks.values(), es, 3);
+
+			for (String s : new TreeSet<String>(results.keySet())) {
+				logger.debugf("%s: %f", s, results.get(s));
+			}
+
+			logger.debugf("%,d / %,d results", results.size(), tasks.size());
+		} finally {
+			es.shutdown();
+		}
+	}
+
+	public static interface IDependentCallable<KEY, VALUE> {
+
+		public VALUE call(Map<KEY, VALUE> priorResults) throws Exception;
+
+	}
+
+	public static interface IDependentTask<KEY, VALUE> {
+
+		public KEY getTaskID();
+
+		public VALUE call(Map<KEY, VALUE> priorResults) throws Exception;
+
+		/**
+		 * set of tasks that must be run first, before this one
+		 * 
+		 */
+		public Set<KEY> getDependsOn();
+
+	}
+
+	public static <KEY, VALUE> Map<KEY, VALUE> runIdempotentTasks(Collection<IDependentTask<KEY, VALUE>> tasks,
+			ExecutorService es, int maxRounds) throws Exception {
+
+		final Map<KEY, VALUE> out = new HashMap<KEY, VALUE>();
+
+		Map<KEY, IDependentTask<KEY, VALUE>> allTasks = new HashMap<KEY, MraUtils.IDependentTask<KEY, VALUE>>();
+		for (IDependentTask<KEY, VALUE> t : tasks) {
+			allTasks.put(t.getTaskID(), t);
+		}
+
+		Set<KEY> remaining = new HashSet<KEY>(allTasks.keySet());
+		Set<KEY> done = new HashSet<KEY>();
+
+		Map<KEY, Integer> failures = new HashMap<KEY, Integer>();
+
+		while (remaining.size() > 0) {
+
+			Set<KEY> toRun = new HashSet<KEY>();
+
+			for (KEY k : remaining) {
+				if (done.containsAll(allTasks.get(k).getDependsOn())) {
+					toRun.add(k);
+				}
+			}
+
+			if (toRun.size() == 0) {
+				throw new IllegalStateException("can't run any more tasks");
+			}
+
+			Map<KEY, Future<VALUE>> futures = new HashMap<KEY, Future<VALUE>>();
+
+			int submitted = 0;
+
+			for (KEY k : toRun) {
+
+				final IDependentTask<KEY, VALUE> t = allTasks.get(k);
+
+				boolean block = false;
+
+				if (failures.containsKey(k)) {
+					if (failures.get(k) > maxRounds) {
+						block = true;
+					}
+				}
+
+				if (!block) {
+					submitted++;
+					futures.put(k, es.submit(new Callable<VALUE>() {
+						@Override
+						public VALUE call() throws Exception {
+							return t.call(out);
+						}
+					}));
+				}
+			}
+
+			if (submitted == 0) {
+				throw new IllegalStateException("can't run any more tasks");
+			}
+
+			for (KEY k : futures.keySet()) {
+				try {
+					out.put(k, futures.get(k).get());
+					done.add(k);
+				} catch (Exception e) {
+					if (failures.containsKey(k)) {
+						failures.put(k, failures.get(k) + 1);
+					} else {
+						failures.put(k, 1);
+					}
+					logger.warnf("exception running %s: %s", k, e);
+					e.printStackTrace();
+				}
+			}
+
+			remaining.removeAll(done);
+
+		}
+
+		return out;
+	}
+
 	public static Map<String, String> parseCommandLineArgs(String... args) {
 		Map<String, String> out = new HashMap<String, String>();
 		for (String a : args) {
@@ -541,6 +701,7 @@ public class MraUtils {
 	public static <A, B> Map<A, B> sortByValues(Map<A, B> map, final Comparator<B> comp) {
 		List<Map.Entry<A, B>> entries = new LinkedList<Entry<A, B>>(map.entrySet());
 		Collections.sort(entries, new Comparator<Map.Entry<A, B>>() {
+			@Override
 			public int compare(Entry<A, B> o1, Entry<A, B> o2) {
 				return comp.compare(o1.getValue(), o2.getValue());
 			}
@@ -556,6 +717,7 @@ public class MraUtils {
 		List<Map.Entry<A, B>> entries = new LinkedList<Entry<A, B>>(map.entrySet());
 		final int sign = ascending ? 1 : -1;
 		Collections.sort(entries, new Comparator<Map.Entry<A, B>>() {
+			@Override
 			public int compare(Entry<A, B> o1, Entry<A, B> o2) {
 				return sign * o1.getValue().compareTo(o2.getValue());
 			}
@@ -675,6 +837,7 @@ public class MraUtils {
 				}
 			}
 
+			@Override
 			public boolean hasNext() {
 				try {
 					if (done) {
@@ -697,6 +860,7 @@ public class MraUtils {
 				}
 			}
 
+			@Override
 			public String next() {
 				try {
 					if (done) {
@@ -721,10 +885,12 @@ public class MraUtils {
 				}
 			}
 
+			@Override
 			public void remove() {
 				throw new UnsupportedOperationException("can't remove from file " + f);
 			}
 
+			@Override
 			public void close() {
 				try {
 					done();
@@ -836,30 +1002,6 @@ public class MraUtils {
 			}
 			out.close();
 			logger.debugf("total = %,d", total);
-		}
-	}
-
-	public static void main(String... args) throws Exception {
-
-		logger.debugf("range1 = %s", getLogRange(30, 0.1, 10));
-		logger.debugf("range2 = %s", getUniformRange(30, 0.1, 10));
-
-		System.exit(0);
-
-		String a = "c0000";
-		String b = "c0000";
-
-		logger.debugf("compare(%s, %s) = %d", a, b, compareArrays(convertFromHex(a), convertFromHex(b)));
-
-		try {
-			rand(new File("/home/mra/data"));
-		} catch (Exception e) {
-
-		}
-		try {
-			rand(new File("/tmp/data"));
-		} catch (Exception e) {
-
 		}
 	}
 
