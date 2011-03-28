@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -75,10 +76,21 @@ public class MraStats {
 	}
 
 	public static double medianBySort(Collection<? extends Number> numbers) {
+
 		int n = numbers.size();
-		if (n == 0) {
+
+		switch (n) {
+		case 0:
 			return Double.NaN;
+		case 1:
+			return numbers.iterator().next().doubleValue();
+		case 2:
+			Iterator<? extends Number> it = numbers.iterator();
+			double a = it.next().doubleValue();
+			double b = it.next().doubleValue();
+			return (a + b) / 2;
 		}
+
 		Number[] array = new Number[n];
 		numbers.toArray(array);
 		Arrays.sort(array);
