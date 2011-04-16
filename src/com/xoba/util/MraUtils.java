@@ -189,21 +189,34 @@ public class MraUtils {
 		return new Dimension(width, height);
 	}
 
+	public static void setCenteredInScreen(Component frame) {
+		setCenteredInScreen(frame, -1);
+	}
+
 	/**
 	 * 
 	 * @param frame
 	 * @param scale
-	 *            0.0 (exclusive) to 1.0 (inclusive, full-screen)
+	 *            0.0 (exclusive) to 1.0 (inclusive, full-screen); if negative,
+	 *            use existing geometry of component
 	 */
 	public static void setCenteredInScreen(Component frame, double scale) {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
 		GraphicsConfiguration gc = gd.getDefaultConfiguration();
 		Rectangle bounds = gc.getBounds();
+
 		int width = new Double(scale * bounds.getWidth()).intValue();
 		int height = new Double(scale * bounds.getHeight()).intValue();
+
+		if (scale < 0) {
+			width = frame.getWidth();
+			height = frame.getHeight();
+		}
+
 		int x = new Double((bounds.getWidth() - width) / 2).intValue();
 		int y = new Double((bounds.getHeight() - height) / 2).intValue();
+
 		frame.setSize(width, height);
 		frame.setLocation(x, y);
 	}
