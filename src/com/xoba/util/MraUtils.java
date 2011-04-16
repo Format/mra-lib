@@ -1,9 +1,12 @@
 package com.xoba.util;
 
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -57,64 +60,6 @@ public class MraUtils {
 	}
 
 	public static final String US_ASCII = "US-ASCII";
-
-	public static void main(String... args) throws Exception {
-
-		Map<String, IDependentTask<String, Double>> tasks = new HashMap<String, MraUtils.IDependentTask<String, Double>>();
-
-		int n = 100;
-
-		for (int i = 0; i < n; i++) {
-			final int j = n - i - 1;
-			final String id = "task-" + j;
-			final Set<String> depends = new HashSet<String>();
-			depends.add("task-" + (j - 1));
-			depends.add("task-" + (j - 2));
-			if (j < 2) {
-				depends.clear();
-			}
-			tasks.put(id, new IDependentTask<String, Double>() {
-				@Override
-				public String getTaskID() {
-					return id;
-				}
-
-				@Override
-				public Double call(Map<String, Double> priorResults) throws Exception {
-					logger.debugf("running %s in %s", id, Thread.currentThread());
-					if (Math.random() < 0.3) {
-						throw new Exception();
-					}
-					if (j < 2) {
-						return new Double(j);
-					}
-					double out = 0;
-					for (String s : getDependsOn()) {
-						out += priorResults.get(s);
-					}
-					return out;
-				}
-
-				@Override
-				public Set<String> getDependsOn() {
-					return depends;
-				}
-			});
-		}
-
-		ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-		try {
-			Map<String, Double> results = runIdempotentTasks(tasks.values(), es, 3);
-
-			for (String s : new TreeSet<String>(results.keySet())) {
-				logger.debugf("%s: %f", s, results.get(s));
-			}
-
-			logger.debugf("%,d / %,d results", results.size(), tasks.size());
-		} finally {
-			es.shutdown();
-		}
-	}
 
 	public static interface IDependentCallable<KEY, VALUE> {
 
@@ -237,10 +182,30 @@ public class MraUtils {
 
 	public static Dimension getMaxWindowDimension(double fraction) {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		GraphicsDevice[] gs = ge.getScreenDevices();
-		int height = new Double(fraction * gs[0].getDisplayMode().getHeight()).intValue();
-		int width = new Double(fraction * gs[0].getDisplayMode().getWidth()).intValue();
+		GraphicsDevice gc = ge.getDefaultScreenDevice();
+		GraphicsConfiguration c = gc.getDefaultConfiguration();
+		int height = new Double(fraction * gc.getDisplayMode().getHeight()).intValue();
+		int width = new Double(fraction * gc.getDisplayMode().getWidth()).intValue();
 		return new Dimension(width, height);
+	}
+
+	/**
+	 * 
+	 * @param frame
+	 * @param scale
+	 *            0.0 (exclusive) to 1.0 (inclusive, full-screen)
+	 */
+	public static void setCenteredInScreen(Component frame, double scale) {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice gd = ge.getDefaultScreenDevice();
+		GraphicsConfiguration gc = gd.getDefaultConfiguration();
+		Rectangle bounds = gc.getBounds();
+		int width = new Double(scale * bounds.getWidth()).intValue();
+		int height = new Double(scale * bounds.getHeight()).intValue();
+		int x = new Double((bounds.getWidth() - width) / 2).intValue();
+		int y = new Double((bounds.getHeight() - height) / 2).intValue();
+		frame.setSize(width, height);
+		frame.setLocation(x, y);
 	}
 
 	public static byte[] load(InputStream in) throws IOException {
@@ -494,7 +459,6 @@ public class MraUtils {
 	public static Point centerLocation(Dimension window, int instance) {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension screenSize = toolkit.getScreenSize();
-
 		return new Point((screenSize.width - window.width) / 2 + 100 * (instance % 3),
 				(screenSize.height - window.height) / 2 + 100 * (instance % 3));
 	}
