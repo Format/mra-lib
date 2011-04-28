@@ -1,6 +1,8 @@
 package com.xoba.util;
 
 import java.awt.Component;
+import java.awt.Desktop;
+import java.awt.Desktop.Action;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
@@ -51,6 +53,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import javax.swing.JOptionPane;
 
 public class MraUtils {
 
@@ -1208,6 +1212,16 @@ public class MraUtils {
 			}
 		}
 		return "";
+	}
+
+	public static void displayURI(URI u) throws Exception {
+		Desktop dt = Desktop.getDesktop();
+		if (dt.isSupported(Action.BROWSE)) {
+			dt.browse(u);
+		} else {
+			logger.warnf("can't browse to %s", u);
+			JOptionPane.showMessageDialog(null, "browse to " + u);
+		}
 	}
 
 }
