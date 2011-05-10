@@ -54,8 +54,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import javax.swing.JOptionPane;
-
 public class MraUtils {
 
 	private static final ILogger logger = LogFactory.getDefault().create();
@@ -1216,12 +1214,20 @@ public class MraUtils {
 
 	public static void displayURI(URI u) throws Exception {
 		Desktop dt = Desktop.getDesktop();
-		if (dt.isSupported(Action.BROWSE)) {
+
+		boolean display = false;
+		if (dt != null) {
+			if (dt.isSupported(Action.BROWSE)) {
+				display = true;
+			}
+		}
+
+		if (display) {
 			dt.browse(u);
 		} else {
 			logger.warnf("can't browse to %s", u);
-			JOptionPane.showMessageDialog(null, "browse to " + u);
 		}
+
 	}
 
 }
