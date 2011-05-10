@@ -1212,22 +1212,25 @@ public class MraUtils {
 		return "";
 	}
 
-	public static void displayURI(URI u) throws Exception {
-		Desktop dt = Desktop.getDesktop();
+	public static void displayURI(URI u) {
+		try {
+			Desktop dt = Desktop.getDesktop();
 
-		boolean display = false;
-		if (dt != null) {
-			if (dt.isSupported(Action.BROWSE)) {
-				display = true;
+			boolean display = false;
+			if (dt != null) {
+				if (dt.isSupported(Action.BROWSE)) {
+					display = true;
+				}
 			}
-		}
 
-		if (display) {
-			dt.browse(u);
-		} else {
-			logger.warnf("can't browse to %s", u);
+			if (display) {
+				dt.browse(u);
+			} else {
+				logger.warnf("can't browse to %s", u);
+			}
+		} catch (Throwable e) {
+			logger.errorf("exception browsing to %s: %s", u, e);
 		}
-
 	}
 
 }
