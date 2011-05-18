@@ -1212,7 +1212,7 @@ public class MraUtils {
 		return "";
 	}
 
-	public static void displayURI(URI u) {
+	public static URI displayURI(URI u) {
 		try {
 			Desktop dt = Desktop.getDesktop();
 
@@ -1231,6 +1231,8 @@ public class MraUtils {
 		} catch (Throwable e) {
 			logger.errorf("exception browsing to %s: %s", u, e);
 		}
+
+		return u;
 	}
 
 }
