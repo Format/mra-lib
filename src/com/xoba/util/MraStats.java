@@ -149,6 +149,14 @@ public class MraStats {
 		return sum / c.size();
 	}
 
+	public static List<Double> abs(Collection<? extends Number> c) {
+		List<Double> out = new LinkedList<Double>();
+		for (final Number n : c) {
+			out.add(Math.abs(n.doubleValue()));
+		}
+		return out;
+	}
+
 	public static double sum(Collection<? extends Number> c) {
 		double sum = 0;
 		for (Number n : c) {
