@@ -236,6 +236,12 @@ public class MraUtils {
 		return md5Hash(buf);
 	}
 
+	public static String getRandomMD5Hash(int bytesOfRandomness, Random random) {
+		byte[] buf = new byte[bytesOfRandomness];
+		random.nextBytes(buf);
+		return md5Hash(buf);
+	}
+
 	public static String md5Hash(String buf) {
 		try {
 			return md5Hash(buf.getBytes(US_ASCII));
