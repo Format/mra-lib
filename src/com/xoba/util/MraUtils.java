@@ -900,17 +900,21 @@ public class MraUtils {
 		PrintWriter pw = new PrintWriter(sw);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(
 				getResourceInputStream(p, name))));
-		boolean done = false;
-		while (!done) {
-			String line = reader.readLine();
-			if (line == null) {
-				done = true;
-			} else {
-				pw.println(line);
+		try {
+			boolean done = false;
+			while (!done) {
+				String line = reader.readLine();
+				if (line == null) {
+					done = true;
+				} else {
+					pw.println(line);
+				}
 			}
+			pw.close();
+			return sw.toString();
+		} finally {
+			reader.close();
 		}
-		pw.close();
-		return sw.toString();
 	}
 
 	public static byte[] getResourceAsBytes(Package p, String name) throws IOException {
