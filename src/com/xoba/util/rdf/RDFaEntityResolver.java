@@ -12,9 +12,9 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.xoba.mra.ILogger;
-import com.xoba.mra.LogFactory;
-import com.xoba.mra.MraUtils;
+import com.xoba.util.ILogger;
+import com.xoba.util.LogFactory;
+import com.xoba.util.MraUtils;
 
 public class RDFaEntityResolver implements EntityResolver {
 
