@@ -24,9 +24,8 @@ public class RDFaEntityResolver implements EntityResolver {
 	private final Map<String, String> map2 = new HashMap<String, String>();
 
 	public RDFaEntityResolver() throws IOException {
-		BufferedReader reader = new BufferedReader(new StringReader(
-				MraUtils.getResourceAsString(
-						RDFaEntityResolver.class.getPackage(), "manifest.txt")));
+		BufferedReader reader = new BufferedReader(new StringReader(MraUtils.getResourceAsString(
+				RDFaEntityResolver.class.getPackage(), "manifest.txt")));
 		try {
 			boolean done = false;
 			while (!done) {
@@ -46,12 +45,11 @@ public class RDFaEntityResolver implements EntityResolver {
 		}
 	}
 
-	public InputSource resolveEntity(String publicId, String systemId)
-			throws SAXException, IOException {
+	@Override
+	public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
 		if (map.containsKey(publicId)) {
 			UUID u = map.get(publicId);
-			URI uri = MraUtils.getResourceURI(
-					RDFaEntityResolver.class.getPackage(), u.toString());
+			URI uri = MraUtils.getResourceURI(RDFaEntityResolver.class.getPackage(), u.toString());
 			return new InputSource(uri.toString());
 		}
 		logger.debugf("can't resolve %s %s", publicId, systemId);
