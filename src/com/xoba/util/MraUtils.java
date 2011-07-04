@@ -1125,6 +1125,24 @@ public class MraUtils {
 		}
 	}
 
+	public static <T> T repeatedlyTry(Callable<T> task, int maxRounds, long backoff) throws Exception {
+		List<Exception> list = new LinkedList<Exception>();
+		int round = 0;
+		while (round++ < maxRounds) {
+			try {
+				return task.call();
+			} catch (Exception e) {
+				list.add(e);
+				try {
+					Thread.sleep(backoff);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+		throw new Exception("can't run: " + list);
+	}
+
 	public static <K, T> Map<K, T> runIdempotentJobsWithRetries(ExecutorService es,
 			Map<K, ? extends Callable<T>> tasks, final int maxRounds) {
 
