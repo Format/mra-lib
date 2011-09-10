@@ -185,7 +185,6 @@ public class MraUtils {
 	public static Dimension getMaxWindowDimension(double fraction) {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gc = ge.getDefaultScreenDevice();
-		GraphicsConfiguration c = gc.getDefaultConfiguration();
 		int height = new Double(fraction * gc.getDisplayMode().getHeight()).intValue();
 		int width = new Double(fraction * gc.getDisplayMode().getWidth()).intValue();
 		return new Dimension(width, height);
@@ -973,24 +972,6 @@ public class MraUtils {
 			return +1;
 		} else {
 			return 0;
-		}
-	}
-
-	private static void rand(File f) throws Exception {
-		f.mkdirs();
-		long total = 0;
-		byte[] buf = new byte[1000000];
-		Random random = new Random();
-		while (true) {
-			OutputStream out = new BufferedOutputStream(new FileOutputStream(new File(f, "file-"
-					+ Math.abs(random.nextInt()) + ".dat")), 65536);
-			for (int i = 0; i < 100; i++) {
-				random.nextBytes(buf);
-				out.write(buf);
-				total += buf.length;
-			}
-			out.close();
-			logger.debugf("total = %,d", total);
 		}
 	}
 
