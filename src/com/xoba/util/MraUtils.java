@@ -1117,9 +1117,14 @@ public class MraUtils {
 
 	public static <K, T> Map<K, T> runIdempotentJobsWithRetries(int threads, Map<K, ? extends Callable<T>> tasks,
 			final int maxRounds) {
+		return runIdempotentJobsWithRetries(threads, tasks, maxRounds, null);
+	}
+
+	public static <K, T> Map<K, T> runIdempotentJobsWithRetries(int threads, Map<K, ? extends Callable<T>> tasks,
+			final int maxRounds, IJobListener<K, T> jobListener) {
 		ExecutorService es = Executors.newFixedThreadPool(threads);
 		try {
-			return runIdempotentJobsWithRetries(es, tasks, maxRounds);
+			return runIdempotentJobsWithRetries(es, tasks, maxRounds, jobListener);
 		} finally {
 			es.shutdown();
 		}
@@ -1143,8 +1148,21 @@ public class MraUtils {
 		throw new Exception("can't run: " + list);
 	}
 
+	public static interface IJobListener<K, T> {
+
+		public void jobDone(K job, Map<K, T> results);
+
+		public void jobException(K job, Exception e);
+
+	}
+
 	public static <K, T> Map<K, T> runIdempotentJobsWithRetries(ExecutorService es,
 			Map<K, ? extends Callable<T>> tasks, final int maxRounds) {
+		return runIdempotentJobsWithRetries(es, tasks, maxRounds, null);
+	}
+
+	public static <K, T> Map<K, T> runIdempotentJobsWithRetries(ExecutorService es,
+			Map<K, ? extends Callable<T>> tasks, final int maxRounds, IJobListener<K, T> jobListener) {
 
 		Map<K, T> out = new HashMap<K, T>();
 
@@ -1169,9 +1187,15 @@ public class MraUtils {
 					T result = futures.get(k).get();
 					out.put(k, result);
 					done.add(k);
+					if (jobListener != null) {
+						jobListener.jobDone(k, out);
+					}
 				} catch (Exception e) {
 					logger.warnf("exception running %s: %s", k, e);
 					e.printStackTrace();
+					if (jobListener != null) {
+						jobListener.jobException(k, e);
+					}
 				}
 			}
 
