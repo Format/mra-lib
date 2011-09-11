@@ -1131,7 +1131,7 @@ public class MraUtils {
 
 	public static interface IJobListener<K, T> {
 
-		public void jobDone(K job, Map<K, T> results);
+		public void jobDone(K job, T result);
 
 		public void jobException(K job, Exception e);
 
@@ -1143,7 +1143,7 @@ public class MraUtils {
 	}
 
 	public static <K, T> Map<K, T> runIdempotentJobsWithRetries(ExecutorService es,
-			Map<K, ? extends Callable<T>> tasks, final int maxRounds, IJobListener<K, T> jobListener) {
+			Map<K, ? extends Callable<T>> tasks, final int maxRounds, final IJobListener<K, T> jobListener) {
 
 		Map<K, T> out = new HashMap<K, T>();
 
@@ -1157,8 +1157,23 @@ public class MraUtils {
 			Collections.shuffle(keys);
 
 			Map<K, Future<T>> futures = new HashMap<K, Future<T>>();
-			for (K k : keys) {
-				futures.put(k, es.submit(tasks.get(k)));
+			for (final K k : keys) {
+				final Callable<T> task = tasks.get(k);
+
+				futures.put(k, es.submit(new Callable<T>() {
+
+					@Override
+					public T call() throws Exception {
+						try {
+							T result = task.call();
+							jobListener.jobDone(k, result);
+							return result;
+						} catch (Exception e) {
+							jobListener.jobException(k, e);
+							throw e;
+						}
+					}
+				}));
 			}
 
 			Set<K> done = new HashSet<K>();
@@ -1168,15 +1183,9 @@ public class MraUtils {
 					T result = futures.get(k).get();
 					out.put(k, result);
 					done.add(k);
-					if (jobListener != null) {
-						jobListener.jobDone(k, out);
-					}
 				} catch (Exception e) {
 					logger.warnf("exception running %s: %s", k, e);
 					e.printStackTrace();
-					if (jobListener != null) {
-						jobListener.jobException(k, e);
-					}
 				}
 			}
 
