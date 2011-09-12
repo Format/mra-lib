@@ -1166,10 +1166,14 @@ public class MraUtils {
 					public T call() throws Exception {
 						try {
 							T result = task.call();
-							jobListener.jobDone(k, result);
+							if (jobListener != null) {
+								jobListener.jobDone(k, result);
+							}
 							return result;
 						} catch (Exception e) {
-							jobListener.jobException(k, e);
+							if (jobListener != null) {
+								jobListener.jobException(k, e);
+							}
 							throw e;
 						}
 					}
