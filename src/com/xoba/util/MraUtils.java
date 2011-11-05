@@ -794,6 +794,9 @@ public class MraUtils {
 	}
 
 	public static List<Double> getUniformRange(double min, double max, int n) {
+		if (min == max && n == 1) {
+			return Collections.singletonList(min);
+		}
 		List<Double> out = new LinkedList<Double>();
 		double dx = (max - min) / (n - 1);
 		for (int i = 0; i < n; i++) {
