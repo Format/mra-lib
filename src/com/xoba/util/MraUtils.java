@@ -766,6 +766,14 @@ public class MraUtils {
 	}
 
 	public static List<Double> getLogRange(double min, double max, int n) {
+		if (min == max && n == 1) {
+			return Collections.singletonList(min);
+		}
+
+		if (min < 0 && max < 0) {
+			return negate(getLogRange(-max, -min, n));
+		}
+
 		List<Double> out = new LinkedList<Double>();
 		double logMin = Math.log(min);
 		double logMax = Math.log(max);
@@ -773,6 +781,14 @@ public class MraUtils {
 		for (int i = 0; i < n; i++) {
 			double log = logMin + i * dx;
 			out.add(Math.exp(log));
+		}
+		return out;
+	}
+
+	private static List<Double> negate(List<Double> list) {
+		List<Double> out = new LinkedList<Double>();
+		for (Double x : list) {
+			out.add(-x);
 		}
 		return out;
 	}
