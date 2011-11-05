@@ -797,8 +797,7 @@ public class MraUtils {
 		List<Double> out = new LinkedList<Double>();
 		double dx = (max - min) / (n - 1);
 		for (int i = 0; i < n; i++) {
-			double log = min + i * dx;
-			out.add(log);
+			out.add(min + i * dx);
 		}
 		return out;
 	}
