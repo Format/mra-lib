@@ -995,25 +995,25 @@ public class MraUtils {
 
 	public static final int compareArrays(final byte[] a, final byte[] b) {
 		if (a == null) {
-			return -1;
-		} else if (b == null) {
-			return 1;
-		} else {
-			int min = Math.min(a.length, b.length);
-			for (int i = 0; i < min; i++) {
-				int cmp = compareBytes(a[i], b[i]);
-				if (cmp != 0) {
-					return cmp;
-				}
-			}
-			if (a.length > b.length) {
-				return +1;
-			} else if (b.length > a.length) {
+			if (b == null) {
+				return 0;
+			} else {
 				return -1;
 			}
-			return 0;
+		} else if (b == null) {
+			return +1;
 		}
-
+		final int lenA = a.length;
+		final int lenB = b.length;
+		final int n = Math.min(lenA, lenB);
+		for (int i = 0; i < n; i++) {
+			final byte a0 = a[i];
+			final byte b0 = b[i];
+			if (a0 != b0) {
+				return a0 - b0;
+			}
+		}
+		return lenA - lenB;
 	}
 
 	public static final int compareDoubles(final double a, final double b) {
