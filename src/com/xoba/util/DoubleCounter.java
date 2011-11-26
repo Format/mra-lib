@@ -10,11 +10,26 @@ import java.util.Set;
 public class DoubleCounter<T> implements Iterable<Map.Entry<T, Double>> {
 
 	@Override
+	public int hashCode() {
+		return map.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof LongCounter) {
+			DoubleCounter<T> other = (DoubleCounter<T>) obj;
+			return map.equals(other.map);
+		} else {
+			return false;
+		}
+	}
+
+	@Override
 	public String toString() {
 		return map.toString();
 	}
 
-	private Map<T, Double> map = new HashMap<T, Double>();
+	private final Map<T, Double> map = new HashMap<T, Double>();
 
 	private boolean immutable = false;
 
@@ -58,6 +73,7 @@ public class DoubleCounter<T> implements Iterable<Map.Entry<T, Double>> {
 		return MraUtils.sortByComparableValues(map, ascending);
 	}
 
+	@Override
 	public Iterator<Map.Entry<T, Double>> iterator() {
 		return Collections.unmodifiableMap(map).entrySet().iterator();
 	}

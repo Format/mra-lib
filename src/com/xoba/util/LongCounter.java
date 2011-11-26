@@ -10,6 +10,21 @@ import java.util.Set;
 
 public class LongCounter<T> implements Iterable<Map.Entry<T, Long>>, Serializable {
 
+	@Override
+	public int hashCode() {
+		return map.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof LongCounter) {
+			LongCounter<T> other = (LongCounter<T>) obj;
+			return map.equals(other.map);
+		} else {
+			return false;
+		}
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -71,6 +86,7 @@ public class LongCounter<T> implements Iterable<Map.Entry<T, Long>>, Serializabl
 		return new HashMap<T, Long>(map);
 	}
 
+	@Override
 	public Iterator<Map.Entry<T, Long>> iterator() {
 		return Collections.unmodifiableMap(map).entrySet().iterator();
 	}
